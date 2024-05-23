@@ -1,7 +1,8 @@
+from logging import debug
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from pymongo import MongoClient
-from dotenv import load_dotenv
+from dotenv import load_dotenv, main
 import os
 
 load_dotenv()
@@ -38,13 +39,9 @@ def shorten():
 
     return jsonify({ 'shorten_url': shorten_url}), 201
 
-@app.route('/<str:shorten_url>/delete', methods=['DELETE'])
+@app.route('/<string:shorten_url>/delete', methods=['DELETE'])
 def delete(shorten_url):
-    data = request.get_json()
     s_url = "https://sfy.vercel.app/" + str(shorten_url)
-    if not data:
-        return jsonify({"error": "No URL given"}), 400
-
     try:
         result = db.users.delete_one({ "shorten_url": s_url})
         if result.deleted_count == 1:
