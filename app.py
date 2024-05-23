@@ -38,15 +38,9 @@ def shorten():
 
     return jsonify({ 'shorten_url': shorten_url}), 201
 
-# @app.route('/<str:shorten_url>')
-# def redirect(shorten_url):
-#     shorten_url = "https://sfy.vercel.app/" + str(shorten_url)
-#
-
 @app.route('/<str:shorten_url>/delete', methods=['DELETE'])
 def delete(shorten_url):
-    # data = request.get_json()
-    return jsonify(shorten_url)
+    data = request.get_json()
     s_url = "https://sfy.vercel.app/" + str(shorten_url)
     if not data:
         return jsonify({"error": "No URL given"}), 400
