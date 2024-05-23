@@ -38,14 +38,16 @@ def shorten():
 
     return jsonify({ 'shorten_url': shorten_url}), 201
 
-@app.route('/delete/<shorten_url>', methods=['DELETE'])
+@app.route('/<shorten_url>/delete', methods=['DELETE'])
 def delete(shorten_url):
     data = request.get_json()
+    return jsonify(shorten_url)
+    s_url = "https://sfy.vercel.app/" + str(shorten_url)
     if not data:
         return jsonify({"error": "No URL given"}), 400
 
     try:
-        result = db.users.delete_one({ "original_url": data['original_url']})
+        result = db.users.delete_one({ "shorten_url": s_url})
         if result.deleted_count == 1:
             return jsonify({"message": "User deleted successfully"}), 200
         else:
