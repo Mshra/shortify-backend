@@ -17,6 +17,10 @@ def generate_short_url(length=6):
     short_url = ''.join(random.choice(characters) for _ in range(length))
     return short_url
 
+@app.route('/')
+def hello():
+    return 'hello'
+
 @app.route('/shorten', methods=['POST'])
 def shorten():
     data = request.get_json()
