@@ -44,11 +44,11 @@ def shorten():
 def redirect_url(shorten_url):
     url = "https://sfy.vercel.app/" + shorten_url
 
-    redirect_url = db.users.find_one({ "shorten_url": url})
+    new_url = db.users.find_one({ "shorten_url": url})
 
     if redirect_url:
         # return f"<script>window.open({redirect_url["original_url"]})</script>"
-        return redirect(original_url)
+        return redirect(new_url["original_url"])
     else:
         return jsonify({ "url not found", url})
 
@@ -63,6 +63,3 @@ def delete(shorten_url):
             return jsonify({"error": "User not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-if __name__ == "__main__":
-    app.run(debug=True)
