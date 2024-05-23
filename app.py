@@ -38,7 +38,7 @@ def shorten():
 
     return jsonify({ 'shorten_url': shorten_url}), 201
 
-@app.route('/<shorten_url>/delete', methods=['DELETE'])
+@app.route('/<str:shorten_url>/delete', methods=['DELETE'])
 def delete(shorten_url):
     data = request.get_json()
     return jsonify(shorten_url)
