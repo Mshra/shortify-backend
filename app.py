@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from pymongo import MongoClient
 from dotenv import load_dotenv, main
+import webbrowser
 import os
 
 load_dotenv()
@@ -46,7 +47,7 @@ def redirect(shorten_url):
     redirect_url = db.users.find_one({ "shorten_url": url})
 
     if redirect_url:
-        return redirect(redirect_url["original_url"])
+        return webbrowser.open(redirect_url["original_url"])
     else:
         return jsonify({ "url not found", url})
 
