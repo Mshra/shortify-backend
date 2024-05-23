@@ -47,7 +47,7 @@ def redirect(shorten_url):
     redirect_url = db.users.find_one({ "shorten_url": url})
 
     if redirect_url:
-        webbrowser.open(redirect_url["original_url"])
+        return f"<script>window.open({redirect_url["original_url"]})</script>"
     else:
         return jsonify({ "url not found", url})
 
