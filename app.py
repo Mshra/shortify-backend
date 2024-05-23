@@ -39,9 +39,20 @@ def shorten():
 
     return jsonify({ 'shorten_url': shorten_url}), 201
 
+@app.route('/<string:shorten_url>')
+def redirect(shorten_url):
+    url = "https://sfy.vercel.app/" + shorten_url
+
+    redirect_url = db.users.find_one({ "shorten_url": url})
+
+    if redirect_url:
+        return redirect(redirect_url["original_url"])
+    else:
+        return jsonify({ "url not found", url})
+
 @app.route('/<string:shorten_url>/delete', methods=['DELETE'])
 def delete(shorten_url):
-    s_url = "https://sfy.vercel.app/" + str(shorten_url)
+    s_url = "https://sfy.vercel.app/" + shorten_url
     try:
         result = db.users.delete_one({ "shorten_url": s_url})
         if result.deleted_count == 1:
