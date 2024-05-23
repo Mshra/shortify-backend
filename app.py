@@ -1,5 +1,5 @@
 from logging import debug
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, redirect
 from flask_cors import CORS
 from pymongo import MongoClient
 from dotenv import load_dotenv, main
@@ -41,13 +41,14 @@ def shorten():
     return jsonify({ 'shorten_url': shorten_url}), 201
 
 @app.route('/<string:shorten_url>')
-def redirect(shorten_url):
+def redirect_url(shorten_url):
     url = "https://sfy.vercel.app/" + shorten_url
 
     redirect_url = db.users.find_one({ "shorten_url": url})
 
     if redirect_url:
-        return f"<script>window.open({redirect_url["original_url"]})</script>"
+        # return f"<script>window.open({redirect_url["original_url"]})</script>"
+        return redirect(original_url)
     else:
         return jsonify({ "url not found", url})
 
@@ -62,3 +63,6 @@ def delete(shorten_url):
             return jsonify({"error": "User not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+if __name__ == "__main__":
+    app.run(debug=True)
