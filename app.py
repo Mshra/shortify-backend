@@ -44,11 +44,10 @@ def redirect_url(shorten_url):
 
     new_url = db.users.find_one({ "shorten_url": url})
 
-    if redirect_url:
+    if new_url:
         return redirect(new_url["original_url"]["url"])
     else:
-        return render_template('index.html'), 404 # added
-        # return jsonify({ "url not found", url})
+        return "You are lost!The URL you entered does not exist.", 404
 
 @app.route('/<string:shorten_url>/delete', methods=['DELETE'])
 def delete(shorten_url):
