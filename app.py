@@ -1,9 +1,7 @@
-from logging import debug
-from flask import Flask, jsonify, request, redirect
+from flask import Flask, jsonify, request, redirect, render_template
 from flask_cors import CORS
 from pymongo import MongoClient
-from dotenv import load_dotenv, main
-import webbrowser
+from dotenv import load_dotenv
 import os
 
 load_dotenv()
@@ -49,7 +47,8 @@ def redirect_url(shorten_url):
     if redirect_url:
         return redirect(new_url["original_url"]["url"])
     else:
-        return jsonify({ "url not found", url})
+        return render_template('index.html'), 404 # added
+        # return jsonify({ "url not found", url})
 
 @app.route('/<string:shorten_url>/delete', methods=['DELETE'])
 def delete(shorten_url):
@@ -62,3 +61,6 @@ def delete(shorten_url):
             return jsonify({"error": "User not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+if __name__ == "__main__":
+    app.run(debug=True, host='0.0.0.0', port=8000)
