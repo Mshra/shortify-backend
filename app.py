@@ -60,6 +60,3 @@ def delete(shorten_url):
             return jsonify({"error": "User not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=8000)
