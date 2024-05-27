@@ -31,7 +31,7 @@ def shorten():
     if existing_url:
         shorten_url = existing_url['shorten_url']
     else:
-        shorten_url = f"{os.getenv('API_URI')}" + str(generate_short_url())
+        shorten_url = f"{os.getenv('API_URI')}" + generate_short_url()
         db.users.insert_one({ 'original_url': original_url, 'shorten_url': shorten_url})
 
     return jsonify({ 'shorten_url': shorten_url}), 201
