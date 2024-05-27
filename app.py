@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, redirect, render_template
+from flask import Flask, jsonify, request, redirect
 from flask_cors import CORS
 from pymongo import MongoClient
 from dotenv import load_dotenv
@@ -19,13 +19,11 @@ def generate_short_url(length=6):
 
 @app.route('/')
 def hello():
-    return 'hello'
+    return 'URL Shortener'
 
 @app.route('/shorten', methods=['POST'])
 def shorten():
     data = request.get_json()
-    if not data:
-        return jsonify({"error": "No URL given"}), 400
 
     original_url = data['original_url']
     existing_url = db.users.find_one({ "original_url": original_url})
@@ -33,14 +31,14 @@ def shorten():
     if existing_url:
         shorten_url = existing_url['shorten_url']
     else:
-        shorten_url = "https://sfy.vercel.app/" + str(generate_short_url())
+        shorten_url = f"{os.getenv('API_URI')}" + str(generate_short_url())
         db.users.insert_one({ 'original_url': original_url, 'shorten_url': shorten_url})
 
     return jsonify({ 'shorten_url': shorten_url}), 201
 
 @app.route('/<string:shorten_url>')
 def redirect_url(shorten_url):
-    url = "https://sfy.vercel.app/" + shorten_url
+    url = f"{os.getenv('API_URI')}" + shorten_url
 
     new_url = db.users.find_one({ "shorten_url": url})
 
@@ -51,7 +49,7 @@ def redirect_url(shorten_url):
 
 @app.route('/<string:shorten_url>/delete', methods=['DELETE'])
 def delete(shorten_url):
-    s_url = "https://sfy.vercel.app/" + shorten_url
+    s_url = f"{os.getenv('API_URI')}" + shorten_url
     try:
         result = db.users.delete_one({ "shorten_url": s_url})
         if result.deleted_count == 1:
